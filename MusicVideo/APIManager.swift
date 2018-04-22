@@ -9,8 +9,9 @@
 import Foundation
 
 class APIManager {
-    
-    func loadData(_ urlString:String, completion: @escaping (_ result:String) -> Void ) {
+    //"completion": result of this func
+    //because use another thread (not main thread)
+    func loadData(_ urlString:String, completion: @escaping ([Videos]) -> Void ) {
         
         
         let config = URLSessionConfiguration.ephemeral
@@ -26,9 +27,7 @@ class APIManager {
             (data, response, error) -> Void in
             
             if error != nil {
-                DispatchQueue.main.async {
-                    completion((error!.localizedDescription))
-                }
+                print((error!.localizedDescription))
                 
             } else {
                 
@@ -39,23 +38,34 @@ class APIManager {
                      Any type of string or value
                      NSJSONSerialization requires the Do / Try / Catch
                      Converts the NSDATA into a JSON Object and cast it to a Dictionary */
-                    
+                    // feed & entry, the two layers skipped in Video class
                     if let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-                        as? JSONDictionary {
+                        as? JSONDictionary,
+                        let feed = json["feed"] as? JSONDictionary,
+                        let entries = feed["entry"] as? JSONArray{
+                        //Video is a self-define class
+                        //the logic is all in the class itself, not here
+                        var videos = [Videos]()
+                        for entry in entries {
+                            let entry = Videos(data: entry as! JSONDictionary)
+                            videos.append(entry)
+                        }
                         
-                        print(json)
+                        let i = videos.count
+                        print("iTunesApiManager = totle count --> \(i)")
+                        print(" ")
                         
+                        ///
                         let priority = DispatchQueue.GlobalQueuePriority.high
                         DispatchQueue.global(priority: priority).async {
                             DispatchQueue.main.async {
-                                completion("JSONSerialization Successful")
+                                //videos is what to be passed back
+                                completion(videos)
                             }
                         }
                     }
                 } catch {
-                    DispatchQueue.main.async {
-                        completion("error in NSJSONSerialization")
-                    }
+                    print("Error in NSJSONSerialization")
                     
                 }
                 //End of JSONSerialization

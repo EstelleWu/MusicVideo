@@ -70,7 +70,7 @@ class Videos {
     
     
     
-    
+    //custom initializer
     //data is already in json format
     //skip some "layers"
     init(data: JSONDictionary) {
@@ -82,6 +82,7 @@ class Videos {
         
         // Video name
         // name is a dictionary
+        //cast it as JSONDictionary
         if let name = data["im:name"] as? JSONDictionary,
             let vName = name["label"] as? String {
             self._vName = vName
