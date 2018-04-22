@@ -1,0 +1,11 @@
+//
+//  Use this file to import your target's public headers that you would like to expose to Swift.
+//
+
+#import "Reachability.h"
+
+let WIFI  = "WIFI Available"
+
+let NOACCESS = "No Internet Access"
+
+let WWAN = "Cellular Access Available"
