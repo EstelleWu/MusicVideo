@@ -7,7 +7,9 @@
 //
 
 import XCTest
+
 @testable import MusicVideo
+
 
 class MusicVideoTests: XCTestCase {
     
