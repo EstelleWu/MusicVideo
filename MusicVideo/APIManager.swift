@@ -21,6 +21,7 @@ class APIManager {
         //        let session = NSURLSession.sharedSession()
         let url = URL(string: urlString)!
         
+        //data: NSData -> json
         let task = session.dataTask(with: url, completionHandler: {
             (data, response, error) -> Void in
             
@@ -40,7 +41,7 @@ class APIManager {
                      Converts the NSDATA into a JSON Object and cast it to a Dictionary */
                     
                     if let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-                        as? [String: AnyObject] {
+                        as? JSONDictionary {
                         
                         print(json)
                         
