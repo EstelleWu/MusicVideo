@@ -4,8 +4,3 @@
 
 #import "Reachability.h"
 
-let WIFI  = "WIFI Available"
-
-let NOACCESS = "No Internet Access"
-
-let WWAN = "Cellular Access Available"
