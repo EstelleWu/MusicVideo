@@ -8,10 +8,11 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDataSource, UITabBarDelegate {
     
     var videos = [Videos]()
     
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var displayLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +25,8 @@ class ViewController: UIViewController {
         //Call API
         let api = APIManager()
         //load, completed and then didLoadData
-        api.loadData("https://itunes.apple.com/us/rss/topmusicvideos/limit=10/json", completion: didLoadData)
+        //iTunes REST API
+        api.loadData("https://itunes.apple.com/us/rss/topmusicvideos/limit=50/json", completion: didLoadData)
     }
     
     func didLoadData(videos: [Videos]) {
@@ -40,6 +42,7 @@ class ViewController: UIViewController {
             print("\(index) name = \(item.vName)")
         }
         
+        tableView.reloadData()
     }
     
     func reachabilityStatusChanged()
@@ -64,6 +67,30 @@ class ViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "ReachStatusChanged"), object: nil)
     }
     
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1;
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+        return videos.count
+    }
+ 
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
+        
+        //even if the cell go off the screen, reuse the cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        
+        //scroll through
+        let video = videos[indexPath.row]
+        
+        cell.textLabel?.text = ("\(indexPath.row + 1)")
+        
+        cell.detailTextLabel?.text = video.vName
+        return cell
+    }
+    
+
 
 
 }
