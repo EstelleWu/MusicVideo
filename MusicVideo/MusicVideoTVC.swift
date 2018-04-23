@@ -21,11 +21,7 @@ class MusicVideoTVC: UITableViewController {
         //in case reachabilityStatus changed again
         reachabilityStatusChanged()
         
-        //Call API
-        let api = APIManager()
-        //load, completed and then didLoadData
-        //iTunes REST API
-        api.loadData("https://itunes.apple.com/us/rss/topmusicvideos/limit=50/json", completion: didLoadData)
+        
     }
     
     func didLoadData(videos: [Videos]) {
@@ -47,18 +43,60 @@ class MusicVideoTVC: UITableViewController {
     func reachabilityStatusChanged()
     {
         
+        
         switch reachabilityStatus {
-        case NOACCESS : view.backgroundColor = UIColor.red
-        //displayLabel.text = "No Internet"
-        case WIFI : view.backgroundColor = UIColor.green
-        //displayLabel.text = "Reachable with WIFI"
-        case WWAN : view.backgroundColor = UIColor.yellow
-        //displayLabel.text = "Reachable with Cellular"
-        default:return
+        case NOACCESS :
+            view.backgroundColor = UIColor.red
+            // move back to Main Queue
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "No Internet Access", message: "Please make sure you are connected to the Internet", preferredStyle: .alert)
+                
+                let cancelAction = UIAlertAction(title: "Cancel", style: .default) {
+                    action -> () in
+                    print("Cancel")
+                }
+                // "destructive" red
+                let deleteAction = UIAlertAction(title: "Delete", style: .destructive) {
+                    action -> () in
+                    print("delete")
+                }
+                let okAction = UIAlertAction(title: "ok", style: .default) { action -> Void in
+                    print("Ok")
+                    
+                    //do something if you want
+                    //alert.dismissViewControllerAnimated(true, completion: nil)
+                }
+                
+                //the order show on the screen
+                alert.addAction(okAction)
+                alert.addAction(cancelAction)
+                alert.addAction(deleteAction)
+                
+                
+                self.present(alert, animated: true, completion: nil)
+            }
+            
+        default:
+            view.backgroundColor = UIColor.green
+            // if (run the api before), otherwise video.count would be null
+            // already has the API built
+            if videos.count > 0 {
+                print("do not refresh API")
+            } else {
+                runAPI()    
+                
+            }
+            
         }
         
     }
-    
+    func runAPI(){
+        //Call API
+        let api = APIManager()
+        //load, completed and then didLoadData
+        //iTunes REST API
+        api.loadData("https://itunes.apple.com/us/rss/topmusicvideos/limit=50/json", completion: didLoadData)
+    }
     // Is called just as the object is about to be deallocated
     // because obverver was added
     deinit
