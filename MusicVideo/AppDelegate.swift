@@ -20,9 +20,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        //1. oberver added
+        //1. observer added
         //if anything change, it would come back as "kReachabilityChangedNotification"
         //and execute func reachabilityChanged
+        //":" means para required
         NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.reachabilityChanged(_:)), name: NSNotification.Name.reachabilityChanged, object: nil)
         
         

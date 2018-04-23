@@ -12,8 +12,14 @@ class ViewController: UIViewController {
     
     var videos = [Videos]()
     
+    @IBOutlet weak var displayLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //refer back to appDelegate
+        NotificationCenter.default.addObserver(self, selector: "reachabilityStatusChanged:", name: NSNotification.Name(rawValue: "ReachStatusChanged"), object: nil)
+        //in case reachabilityStatus changed again
+        reachabilityStatusChanged()
         
         //Call API
         let api = APIManager()
@@ -34,6 +40,28 @@ class ViewController: UIViewController {
             print("\(index) name = \(item.vName)")
         }
         
+    }
+    
+    func reachabilityStatusChanged()
+    {
+        
+        switch reachabilityStatus {
+        case NOACCESS : view.backgroundColor = UIColor.red
+        displayLabel.text = "No Internet"
+        case WIFI : view.backgroundColor = UIColor.green
+        displayLabel.text = "Reachable with WIFI"
+        case WWAN : view.backgroundColor = UIColor.yellow
+        displayLabel.text = "Reachable with Cellular"
+        default:return
+        }
+        
+    }
+    
+    // Is called just as the object is about to be deallocated
+    // because obverver was added
+    deinit
+    {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: "ReachStatusChanged"), object: nil)
     }
     
 
