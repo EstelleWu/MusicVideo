@@ -77,7 +77,7 @@ class MusicVideoTVC: UITableViewController {
             }
             
         default:
-            view.backgroundColor = UIColor.green
+            //view.backgroundColor = UIColor.green
             // if (run the api before), otherwise video.count would be null
             // already has the API built
             if videos.count > 0 {
@@ -116,15 +116,20 @@ class MusicVideoTVC: UITableViewController {
         return videos.count
     }
 
+    private struct storyboard{
+        static let cellReuseIdentifier = "cell"
+    }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        //connect to class "MusicVideoTableViewCell"
+        //just put in the cell, not logic
+        let cell = tableView.dequeueReusableCell(withIdentifier: storyboard.cellReuseIdentifier, for: indexPath) as! MusicVideoTableViewCell
 
-        let video = videos[indexPath.row]
+        cell.video = videos[indexPath.row]
         
-        cell.textLabel?.text = ("\(indexPath.row + 1)")
-        
-        cell.detailTextLabel?.text = video.vName
+//        cell.textLabel?.text = ("\(indexPath.row + 1)")
+//        
+//        cell.detailTextLabel?.text = video.vName
 
 
         return cell

@@ -11,6 +11,7 @@ import Foundation
 //get info from the url
 class Videos {
     
+    var vRank = 0
     // Data Encapsulation
     fileprivate var _vName:String
     fileprivate var _vImageUrl:String

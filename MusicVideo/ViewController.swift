@@ -26,7 +26,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITabBarDelegate 
         let api = APIManager()
         //load, completed and then didLoadData
         //iTunes REST API
-        api.loadData("https://itunes.apple.com/us/rss/topmusicvideos/limit=50/json", completion: didLoadData)
+        api.loadData("https://itunes.apple.com/us/rss/topmusicvideos/limit=200/json", completion: didLoadData)
     }
     
     func didLoadData(videos: [Videos]) {
